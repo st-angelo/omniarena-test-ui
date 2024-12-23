@@ -1,0 +1,425 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+:root {
+  --ally-color: rgb(150, 206, 180);
+  --enemy-color: rgb(255, 173, 96);
+  --ally-background: rgba(150, 206, 180, 0.3);
+  --enemy-background: rgba(255, 173, 96, 0.3);
+  --text-color: rgb(50, 50, 50);
+  --accent-color: rgb(46, 80, 119);
+}
+
+main,
+div {
+  box-sizing: border-box;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  font-family: 'Noto Sans', serif;
+  color: var(--text-color);
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#start-panel {
+  display: flex;
+  flex-direction: column;
+  height: 78px;
+  align-items: center;
+  justify-content: end;
+  gap: 10px;
+}
+
+#start-button {
+  padding-inline: 48px;
+  padding-block: 6px;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#start-button:disabled {
+  background-color: lightgray;
+}
+
+.action {
+  padding-inline: 48px;
+  padding-block: 12px;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  &:disabled {
+    background-color: lightgray;
+  }
+}
+
+#board {
+  width: 1500px;
+  height: 850px;
+  background-color: rgb(240, 240, 240);
+  padding: 36px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  border-radius: 12px;
+  border: 1px solid lightgray;
+
+  & #corner-panel {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  & #board-footer {
+    flex-grow: 1;
+    display: flex;
+    gap: 24px;
+  }
+
+  & #action-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: 6px;
+  }
+}
+
+.corner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.character {
+  display: flex;
+  gap: 12px;
+  border-radius: 12px;
+  padding: 12px;
+
+  &.is-player {
+    background-color: var(--ally-background);
+
+    & .avatar-container {
+      border-color: var(--ally-color);
+    }
+  }
+
+  &:not(.is-player) {
+    flex-direction: row-reverse;
+    background-color: var(--enemy-background);
+
+    & .avatar-container {
+      border-color: var(--enemy-color);
+    }
+
+    & .effect-panel {
+      justify-content: end;
+      flex-direction: row-reverse;
+    }
+  }
+
+  & .effect-panel {
+    display: flex;
+    gap: 6px;
+  }
+
+  & .avatar-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  & .avatar-container {
+    display: flex;
+    position: relative;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 6px;
+  }
+
+  & .character-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  & .skill-panel {
+    display: flex;
+    gap: 12px;
+  }
+
+  & .selection-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background-color: orange;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  &.valid-target .selection-overlay {
+    display: block;
+  }
+
+  &.targeted .avatar-container {
+    border-color: red;
+  }
+
+  &.dead .avatar {
+    filter: grayscale(1);
+  }
+}
+
+.health-bar {
+  width: 120px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid var(--accent-color);
+  overflow: hidden;
+  position: relative;
+  font-weight: bold;
+
+  & .progress {
+    height: 100%;
+    background-color: limegreen;
+    transition: width 0.5s ease, background-color 0.5s ease;
+
+    &[data-type='wounded'] {
+      background-color: orange;
+    }
+
+    &[data-type='critical'] {
+      background-color: orangered;
+    }
+  }
+
+  & .health-bar-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.skill {
+  position: relative;
+
+  &.inactive .icon {
+    filter: grayscale(1);
+    cursor: not-allowed;
+  }
+
+  & .queued-overlay,
+  & .cooldown-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background-color: rgba(200, 200, 200, 0.4);
+    pointer-events: none;
+    color: white;
+    font-weight: bolder;
+    font-size: 60px;
+  }
+
+  &.queued .queued-overlay,
+  &.on-cooldown .cooldown-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.effect {
+}
+
+.icon {
+  width: 90px;
+  height: 90px;
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.mini {
+  width: 36px;
+  height: 36px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+}
+
+#highlight {
+  flex-grow: 1;
+  background-color: rgb(220, 220, 220);
+  border: 1px solid lightgray;
+  border-radius: 12px;
+  display: flex;
+  padding: 12px;
+  gap: 12px;
+
+  & #highlight-icon {
+    height: 150px;
+    width: 150px;
+    border-radius: 12px;
+  }
+
+  & #highlight-details-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  & #highlight-title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+}
