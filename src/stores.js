@@ -12,6 +12,10 @@ export const targetingOptionsStore = new ReactiveStore(null);
 
 export const queuedSkillsStore = new ReactiveStore([]);
 
+export const deadAlliesStore = new ReactiveStore(0);
+
+export const deadEnemiesStore = new ReactiveStore(0);
+
 export function resetTargeting() {
   targetingStore.set(null);
   validTargetsStore.set([]);
