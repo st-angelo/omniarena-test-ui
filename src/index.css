@@ -10,6 +10,11 @@
   --enemy-background: rgba(255, 173, 96, 0.3);
   --text-color: rgb(50, 50, 50);
   --accent-color: rgb(46, 80, 119);
+  --resource-green: #32c956;
+  --resource-white: #ffffff;
+  --resource-red: #d13030;
+  --resource-blue: #4269f5;
+  --resource-random: #000000;
 }
 
 main,
@@ -198,7 +203,7 @@ main {
 
 #board {
   width: 1500px;
-  height: 850px;
+  height: 900px;
   background-color: rgb(240, 240, 240);
   padding: 36px;
   box-sizing: border-box;
@@ -217,6 +222,8 @@ main {
     flex-grow: 1;
     display: flex;
     gap: 24px;
+    height: 176px;
+    box-sizing: border-box;
   }
 
   & #action-panel {
@@ -231,6 +238,28 @@ main {
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  &:not(.is-player) {
+    & .resources {
+      flex-direction: row-reverse;
+
+      & .resource-label {
+        margin-right: 0px;
+        margin-left: 6px;
+      }
+    }
+  }
+
+  & .resources {
+    display: flex;
+    gap: 6px;
+    margin-inline: 12px;
+    margin-bottom: 6px;
+
+    & .resource-label {
+      margin-right: 6px;
+    }
+  }
 }
 
 .character {
@@ -238,12 +267,18 @@ main {
   gap: 12px;
   border-radius: 12px;
   padding: 12px;
+  padding-top: 30px;
 
   &.is-player {
     background-color: var(--ally-background);
 
     & .avatar-container {
       border-color: var(--ally-color);
+    }
+
+    .border {
+      transform: scale(-1, 1);
+      left: -54px;
     }
   }
 
@@ -259,17 +294,26 @@ main {
       justify-content: end;
       flex-direction: row-reverse;
     }
+
+    & .avatar {
+      transform: scale(-1, 1);
+    }
   }
 
   & .effect-panel {
     display: flex;
     gap: 6px;
+    height: 40px;
   }
 
   & .avatar-panel {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 18px;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 120px;
+    align-items: center;
   }
 
   & .avatar-container {
@@ -321,6 +365,7 @@ main {
   overflow: hidden;
   position: relative;
   font-weight: bold;
+  background-color: white;
 
   & .progress {
     height: 100%;
@@ -373,6 +418,39 @@ main {
 }
 
 .effect {
+  position: relative;
+  z-index: 1;
+
+  &.queued {
+    animation: blink 600ms infinite;
+  }
+
+  & .effect-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    color: white;
+    font-weight: bolder;
+    font-size: 30px;
+  }
+}
+
+.effect-description {
+  display: flex;
+  flex-direction: column;
+  padding-block: 6px;
+  gap: 6px;
+
+  & .effect-content {
+    font-weight: bold;
+  }
+
+  & .effect-duration {
+    font-size: 14px;
+    font-style: italic;
+  }
 }
 
 .icon {
@@ -392,9 +470,48 @@ main {
   height: 36px;
 }
 
-.avatar {
-  width: 120px;
-  height: 120px;
+.border {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  top: -59px;
+  left: -42px;
+  pointer-events: none;
+}
+
+.cost-panel {
+  display: flex;
+  flex-grow: 1;
+  align-items: end;
+  justify-content: end;
+  gap: 6px;
+  margin-inline: 6px;
+}
+
+.resource {
+  width: 18px;
+  height: 18px;
+  border: 1px solid black;
+
+  &[data-type='green'] {
+    background-color: var(--resource-green);
+  }
+
+  &[data-type='white'] {
+    background-color: var(--resource-white);
+  }
+
+  &[data-type='red'] {
+    background-color: var(--resource-red);
+  }
+
+  &[data-type='blue'] {
+    background-color: var(--resource-blue);
+  }
+
+  &[data-type='random'] {
+    background-color: var(--resource-random);
+  }
 }
 
 #highlight {
@@ -415,11 +532,61 @@ main {
   & #highlight-details-panel {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     gap: 12px;
   }
 
   & #highlight-title {
     font-weight: bold;
     font-size: 18px;
+  }
+}
+
+.energy-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  padding: 18px;
+  align-items: center;
+
+  & .energy-selector-resource {
+    display: flex;
+    gap: 6px;
+  }
+
+  & .energy-selector-control {
+    border: none;
+    border-radius: 6px;
+    padding-inline: 12px;
+  }
+
+  & .energy-selector-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  & .action {
+    padding-inline: 12px;
+    padding-block: 6px;
+    margin-top: 6px;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
   }
 }

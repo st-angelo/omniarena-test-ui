@@ -7,7 +7,7 @@ function Board({ board, onNext, onSurrender }) {
   const [nextDisabled, setNextDisabled] = useState(false);
 
   async function handleNextClick() {
-    if (targetingStore.get()) resetTargeting();
+    if (!targetingStore.isEmpty) resetTargeting();
     setNextDisabled(true);
     await onNext();
     setTimeout(() => {
@@ -29,7 +29,11 @@ function Board({ board, onNext, onSurrender }) {
       </div>
       <div id="board-footer">
         <div id="action-panel">
-          <button className="action" onClick={handleNextClick} disabled={nextDisabled}>
+          <button
+            className="action"
+            onClick={handleNextClick}
+            disabled={nextDisabled}
+          >
             Next
           </button>
           <button className="action">Mute</button>

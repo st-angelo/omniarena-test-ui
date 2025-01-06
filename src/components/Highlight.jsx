@@ -1,3 +1,4 @@
+import { enumResourceToString } from '../constants';
 import { useReactiveStore } from '../reactiveStore';
 import { highlightStore } from '../stores';
 
@@ -12,6 +13,17 @@ function Highlight() {
           <div id="highlight-details-panel">
             <span id="highlight-title">{highlight.title}</span>
             <span id="highlight-description">{highlight.description}</span>
+            {highlight.cost && (
+              <div className="cost-panel">
+                {highlight.cost.map((resource) => (
+                  <div
+                    key={crypto.randomUUID()}
+                    className="resource"
+                    data-type={enumResourceToString[resource]}
+                  ></div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}

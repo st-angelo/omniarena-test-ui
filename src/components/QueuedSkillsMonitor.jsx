@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useReactiveStore } from '../reactiveStore';
 import {
-  deadAlliesStore,
-  deadEnemiesStore,
+  nextResourcesStore,
   queuedSkillsStore,
   resetTargeting,
+  resourcesStore,
   targetingOptionsStore,
   targetingStore,
   targetsStore,
@@ -16,8 +16,6 @@ function QueuedSkillsMonitor() {
   const [targetingOptions] = useReactiveStore(targetingOptionsStore);
   const [targeting] = useReactiveStore(targetingStore);
   const [validTargets] = useReactiveStore(validTargetsStore);
-  const [deadAllies] = useReactiveStore(deadAlliesStore);
-  const [deadEnemies] = useReactiveStore(deadEnemiesStore);
 
   useEffect(() => {
     if (!targeting || !targetingOptions) return;
@@ -29,13 +27,22 @@ function QueuedSkillsMonitor() {
       if (!(targets.length === 1)) valid = false;
     }
     if (targetingOptions.allEnemies) {
-      if (!(targets.length === 3 - deadEnemies)) valid = false;
+      if (!(targets.length === validTargets.length)) valid = false;
     }
     if (valid) {
-      queuedSkillsStore.update(prev => [...prev, { id: targeting, targets }]);
+      queuedSkillsStore.update((prev) => [
+        ...prev,
+        {
+          skillId: targeting.skillId,
+          skillCode: targeting.skillCode,
+          userId: targeting.userId,
+          targets,
+        },
+      ]);
+      resourcesStore.set(nextResourcesStore.get());
       resetTargeting();
     }
-  }, [targeting, targets, targetingOptions, validTargets, deadAllies, deadEnemies]);
+  }, [targeting, targets, targetingOptions, validTargets]);
 
   return null;
 }

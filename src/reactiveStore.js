@@ -33,7 +33,11 @@ export class ReactiveStore {
   }
 
   #notify() {
-    this.#subscribers.forEach(subscriber => subscriber(this.#data));
+    this.#subscribers.forEach((subscriber) => subscriber(this.#data));
+  }
+
+  get isEmpty() {
+    return !this.#data;
   }
 }
 
@@ -41,21 +45,21 @@ export function useReactiveStore(store) {
   const [data, setData] = useState(() => store.get());
 
   useEffect(() => {
-    return store.subscribe(_data => {
+    return store.subscribe((_data) => {
       if (typeof _data === 'function') setData(() => _data);
       else setData(_data);
     });
   }, [store]);
 
   const update = useCallback(
-    updateFn => {
+    (updateFn) => {
       store.update(updateFn);
     },
     [store]
   );
 
   const set = useCallback(
-    data => {
+    (data) => {
       store.set(data);
     },
     [store]
