@@ -10,7 +10,7 @@ function RandomEnergySelector({ onNext, onClose }) {
   const [currentCornerId] = useReactiveStore(currentCornerStore);
   const [resources] = useReactiveStore(resourcesStore);
   const [randomEnergiesPicked, , updateRandomEnergiesPicked] = useReactiveStore(
-    randomEnergiesPickedStore
+    randomEnergiesPickedStore,
   );
 
   const cornerResources = resources[currentCornerId];
@@ -20,7 +20,6 @@ function RandomEnergySelector({ onNext, onClose }) {
     Object.keys(value).forEach((resource) => {
       if (resource === 'randomsUsed') return;
       for (const picked of randomEnergiesPicked) {
-        console.log(picked === Number(resource));
         if (picked === Number(resource)) value[resource]--;
       }
     });
@@ -37,24 +36,15 @@ function RandomEnergySelector({ onNext, onClose }) {
     if (index === -1) return;
     updateRandomEnergiesPicked((prev) => {
       prev.splice(index, 1);
-      return prev;
+      return [...prev];
     });
   }
-
-  console.log('xddddd', modifiedResources);
-  console.log(
-    'lolol',
-    randomEnergiesPicked.length,
-    cornerResources,
-    cornerResources.randomsUsed !== randomEnergiesPicked.length
-  );
 
   return (
     <div className="energy-selector">
       {Object.keys(modifiedResources)
         .filter((resource) => resource !== 'randomsUsed')
         .map((resource) => {
-          console.log(modifiedResources[resource]);
           return (
             <div key={crypto.randomUUID()} className="energy-selector-resource">
               <button

@@ -29,6 +29,12 @@ function QueuedSkillsMonitor() {
     if (targetingOptions.allEnemies) {
       if (!(targets.length === validTargets.length)) valid = false;
     }
+    if (targetingOptions.teamMembers) {
+      if (!(targets.length === targetingOptions.teamMembers)) valid = false;
+    }
+    if (targetingOptions.allies) {
+      if (!(targets.length === targetingOptions.allies)) valid = false;
+    }
     if (valid) {
       queuedSkillsStore.update((prev) => [
         ...prev,

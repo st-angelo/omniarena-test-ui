@@ -8,15 +8,17 @@ function HealthBar({ value, maxValue }) {
 
   const tweenInterval = useRef();
 
+  const normalizedValue = value < 0 ? 0 : value;
+
   useEffect(() => {
     if (previousValue) {
-      const difference = Math.abs(value - previousValue);
-      const modifier = value > previousValue ? 1 : -1;
+      const difference = Math.abs(normalizedValue - previousValue);
+      const modifier = normalizedValue > previousValue ? 1 : -1;
       clearInterval(tweenInterval.current);
       tweenInterval.current = setInterval(() => {
-        setInternalValue(prev => {
-          if (prev === value) {
-            setPreviousValue(value);
+        setInternalValue((prev) => {
+          if (prev === normalizedValue) {
+            setPreviousValue(normalizedValue);
             clearInterval(tweenInterval.current);
             return prev;
           } else {
@@ -25,14 +27,20 @@ function HealthBar({ value, maxValue }) {
         });
       }, 500 / difference);
     }
-  }, [previousValue, value]);
+  }, [previousValue, normalizedValue]);
 
   return (
     <div className="health-bar">
       <div
         className="progress"
-        data-type={value <= 40 ? 'critical' : value <= 70 ? 'wounded' : 'healthy'}
-        style={{ width: `${value}%` }}
+        data-type={
+          normalizedValue <= 40
+            ? 'critical'
+            : normalizedValue <= 70
+              ? 'wounded'
+              : 'healthy'
+        }
+        style={{ width: `${normalizedValue}%` }}
       ></div>
       <span className="health-bar-label">{internalValue}</span>
     </div>

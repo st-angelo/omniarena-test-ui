@@ -55,14 +55,14 @@ export function useReactiveStore(store) {
     (updateFn) => {
       store.update(updateFn);
     },
-    [store]
+    [store],
   );
 
   const set = useCallback(
     (data) => {
       store.set(data);
     },
-    [store]
+    [store],
   );
 
   return [data, set, update];

@@ -17,7 +17,7 @@ function Skill({ skill, active }) {
   const [resources] = useReactiveStore(resourcesStore);
 
   const isQueued = queuedSkills.some(
-    (queuedSkill) => queuedSkill.skillId === skill.id
+    (queuedSkill) => queuedSkill.skillId === skill.id,
   );
 
   const hasValidTargets = skill.validTargets.length > 0;
@@ -25,13 +25,13 @@ function Skill({ skill, active }) {
   const onCooldown = skill.cooldown > 0;
 
   const characterQueuedSkill = queuedSkills.find(
-    (queuedSkill) => queuedSkill.userId === skill.characterId
+    (queuedSkill) => queuedSkill.userId === skill.characterId,
   );
 
   const resourcesAfterSpending = getResourcesAfterSpending(
     skill.cost,
     skill.cornerId,
-    resources
+    resources,
   );
 
   const hasEnoughResources = resourcesAfterSpending !== null;
@@ -39,17 +39,17 @@ function Skill({ skill, active }) {
   function handleClick() {
     if (isQueued) {
       queuedSkillsStore.update((prev) =>
-        prev.filter((queuedSkill) => queuedSkill.skillId !== skill.id)
+        prev.filter((queuedSkill) => queuedSkill.skillId !== skill.id),
       );
       const newResources = { ...resources };
       for (const resource of skill.cost) {
         if (resource === stringResourceToEnum['random'])
           newResources[skill.cornerId].randomsUsed--;
         else {
-          newResources[skill.cornerId][resource]--;
+          newResources[skill.cornerId][resource]++;
         }
       }
-      console.log(newResources);
+      console.log('newres', newResources);
       resourcesStore.set(newResources);
       return;
     }

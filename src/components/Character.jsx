@@ -78,7 +78,7 @@ function Character({ character, isPlayer, active }) {
         <div className="avatar-container">
           <img
             className="avatar icon"
-            src="facepic.jpg"
+            src={`facepic_${character.code.split('_')[1]}.jpg`}
             onClick={handleClick}
           />
           <div className="selection-overlay"></div>
